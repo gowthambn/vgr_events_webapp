@@ -207,6 +207,34 @@ input[type="radio"] {
 	<div class="form-container">
 		<form id="bookingForm" action="/vgr_events/clientData"
 			method="post">	
+			<!-- Client Details -->
+			<div class="form-row"
+				style="display: flex; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+				<div class="form-group"
+					style="flex: 1; min-width: 200px; margin-right: 10px;">
+					<div class="headers" style="text-align: center;">
+						<h3>Full Name:</h3>
+					</div>
+					<label for="name" style="display: none;">Full Name:</label> <input
+						type="text" id="name" name="name" required />
+				</div>
+				<div class="form-group"
+					style="flex: 1; min-width: 200px; margin-right: 10px;">
+					<div class="headers" style="text-align: center;">
+						<h3>Contact Number:</h3>
+					</div>
+					<label for="phone" style="display: none;">Contact Number</label> <input
+						type="tel" id="phone" name="phone" required />
+				</div>
+				<div class="form-group" style="flex: 1; min-width: 200px;">
+					<div class="headers" style="text-align: center;">
+						<h3>Email Address:</h3>
+					</div>
+					<label for="email" style="display: none;">Email Address</label> <input
+						type="email" id="email" name="email" />
+				</div>
+			</div>
+					
 			<!-- Source and Destination Section -->
 			<div class="form-row"
 				style="display: flex; justify-content: center; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap;">
@@ -214,7 +242,7 @@ input[type="radio"] {
 				<div class="source-container"
 					style="flex: 1; min-width: 300px; margin-right: 20px;">
 					<div class="headers" style="text-align: center;">
-						<h2>Source</h2>
+						<h3>Source</h3>
 					</div>
 					<div class="country-state-city-container">
 						<div class="form-group">
@@ -244,7 +272,7 @@ input[type="radio"] {
 				<!-- Destination Section -->
 				<div class="destination-container" style="flex: 1; min-width: 300px;">
 					<div class="headers" style="text-align: center;">
-						<h2>Destination</h2>
+						<h3><b>Destination</b></h3>
 					</div>
 					<div class="country-state-city-container">
 						<div class="form-group">
@@ -287,34 +315,6 @@ input[type="radio"] {
 					</span>
 				</div>
 			</div>
-			<!-- Client Details -->
-			<div class="form-row"
-				style="display: flex; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
-				<div class="form-group"
-					style="flex: 1; min-width: 200px; margin-right: 10px;">
-					<div class="headers" style="text-align: center;">
-						<h3>Name:</h3>
-					</div>
-					<label for="name" style="display: none;">Name:</label> <input
-						type="text" id="name" name="name" required />
-				</div>
-				<div class="form-group"
-					style="flex: 1; min-width: 200px; margin-right: 10px;">
-					<div class="headers" style="text-align: center;">
-						<h3>Phone Number:</h3>
-					</div>
-					<label for="phone" style="display: none;">Phone Number:</label> <input
-						type="tel" id="phone" name="phone" required />
-				</div>
-				<div class="form-group" style="flex: 1; min-width: 200px;">
-					<div class="headers" style="text-align: center;">
-						<h3>Email:</h3>
-					</div>
-					<label for="email" style="display: none;">Email:</label> <input
-						type="email" id="email" name="email" />
-				</div>
-			</div>
-
 			<div class="form-row">
 				<div class="form-group">
 					<label for="checkin">Check-in Date:</label> <input type="date"

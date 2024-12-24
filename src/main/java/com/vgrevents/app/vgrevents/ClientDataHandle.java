@@ -60,8 +60,7 @@ public class ClientDataHandle extends HttpServlet {
         String formattedCheckin = formatDate(checkin);
         String formattedCheckout = formatDate(checkout);
 
-        // Your email address where you want to receive notifications
-        String to = "bngowtham1988@gmail.com"; // Your email address
+        String to = "rrhospitalityevents@gmail.com"; // Admin mail
 
         // Send email to admin
         boolean emailSentToAdmin = sendEmail(to, "Dear Administrator,", enquiryCode, name, phone, email,
@@ -106,7 +105,7 @@ public class ClientDataHandle extends HttpServlet {
         // SMTP server information
         String host = "smtp.gmail.com"; // Change this to your SMTP server
         String username = "gowthambn1988@gmail.com"; // Change this to your SMTP user
-        String password = "123byG@1988"; // Use your actual SMTP password
+        String password = "123byG@1988"; // Use your actual Gmail password
 
         // Setup properties for the session
         Properties props = new Properties();
