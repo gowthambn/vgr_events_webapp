@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                             http://java.sun.com/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <!-- Servlet Definition -->
+    <servlet>
+        <servlet-name>ClientDataHandle</servlet-name>
+        <servlet-class>com.vgrevents.app.vgrevents.ClientDataHandle</servlet-class>
+    </servlet>
+
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>ClientDataHandle</servlet-name>
+        <url-pattern>/clientData</url-pattern>
+    </servlet-mapping>
+
+    <!-- Welcome File List (Optional) -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>

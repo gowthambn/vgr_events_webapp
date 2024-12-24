@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            text-align: left;
+            background-image: url('images/Start/4_Background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .country,
+        .state,
+        .destination {
+            margin-bottom: 20px;
+            text-align: center;
+            display: inline-block;
+            padding: 10px;
+        }
+
+        .state {
+            border: 2px solid #32CD32;
+            border-radius: 8px;
+            background-color: #e6ffe6;
+        }
+
+        .destination {
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            background-color: #fffacd;
+        }
+
+        .country h2:hover,
+        .state h3:hover,
+        .destination h4:hover {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .toggle {
+            cursor: pointer;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-size: 1.2em;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .highlighted {
+            background-color: #d3d3d3;
+            color: black;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .side-bar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .side-bar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .side-bar li {
+            margin: 10px 0;
+        }
+
+        .side-bar .toggle {
+            cursor: pointer;
+            color: darkcyan;
+        }
+
+        .side-bar .toggle:hover {
+            color: grey;
+        }
+
+        .side-bar ul ul {
+            padding-left: 20px;
+        }
+
+        .hotel {
+            margin-bottom: 20px;
+        }
+
+        .hotel img {
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+            transition: transform 0.3s ease-in-out;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container img {
+            width: 20%;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .hotel-image-container {
+            display: flex;
+            overflow-x: auto;
+            position: fixed;
+            bottom: 20px;
+            left: 220px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            align-items: center;
+        }
+
+        .hotel-image-container img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .hotel-image-container img:last-child {
+            margin-right: 0;
+        }
+
+        .hotel-image-container img:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .full-screen-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .full-screen {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: cover;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .popup img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .country-toggle {
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .state-toggle {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .city-toggle {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .hotel-toggle {
+            font-weight: normal;
+            font-size: 12px;
+        }
+
+        .header, .footer {
+        position: fixed;
+        left: 20px; 
+        width: calc(100% - 40px); 
+        text-align: center;
+        color: white; /* Change color to white */
+        font-weight: bold; /* Make text bold */
+        pointer-events: none; /* Prevent mouse events */
+        z-index: 100;
+    }
+
+    .header {
+        top: 300px; /* Adjust as necessary */
+        font-size: 24px; /* Font size for header */
+    }
+
+    .footer {
+        bottom: 200px; /* Adjust as necessary */
+        font-size: 20px; /* Font size for footer */
+    }
+    </style>
+</head>
+
+<body>
+    <div class="side-bar">
+        <ul>
+            <!-- Side bar menu items will be dynamically populated -->
+        </ul>
+    </div>
+    <div class="content">
+        <!-- Content will be inserted here -->
+    </div>
+
+    <script>
+        const sideBar = document.querySelector('.side-bar ul');
+
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                for (const country in data) {
+                    const countryLi = document.createElement('li');
+                    countryLi.innerHTML = `<span class="toggle country-toggle">${country}</span>`;
+
+                    const stateUl = document.createElement('ul');
+                    stateUl.classList.add('hidden');
+
+                    for (const state in data[country]) {
+                        const stateLi = document.createElement('li');
+                        stateLi.innerHTML = `<span class="toggle state-toggle">${state}</span>`;
+
+                        const cityUl = document.createElement('ul');
+                        cityUl.classList.add('hidden');
+
+                        for (const city in data[country][state]) {
+                            const cityLi = document.createElement('li');
+                            const citySpan = document.createElement('span');
+                            citySpan.classList.add('toggle', 'city-toggle');
+                            citySpan.textContent = city;
+
+                            const hotelUl = document.createElement('ul');
+                            hotelUl.classList.add('hidden');
+
+                            if (data[country][state][city].hotels) {
+                                for (const hotel in data[country][state][city].hotels) {
+                                    const hotelLi = document.createElement('li');
+                                    hotelLi.innerHTML = `<span class="toggle hotel-toggle">${hotel}</span>`;
+                                    hotelLi.addEventListener('click', () => {
+                                        displayHotelImage(country, state, city, hotel);
+                                    });
+                                    hotelUl.appendChild(hotelLi);
+                                }
+                            }
+
+                            citySpan.addEventListener('click', () => {
+                                hotelUl.classList.toggle('hidden');
+                                displayCityImage(country, state, city);
+                                displayVideo(country, state, city);
+                            });
+
+                            cityLi.appendChild(citySpan);
+                            cityLi.appendChild(hotelUl);
+                            cityUl.appendChild(cityLi);
+                        }
+
+                        stateLi.appendChild(cityUl);
+                        stateLi.querySelector('.state-toggle').addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            cityUl.classList.toggle('hidden');
+                        });
+
+                        stateUl.appendChild(stateLi);
+                    }
+
+                    countryLi.querySelector('.country-toggle').addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        stateUl.classList.toggle('hidden');
+                    });
+
+                    countryLi.appendChild(stateUl);
+                    sideBar.appendChild(countryLi);
+                }
+            })
+            .catch(error => console.error('Error fetching data.json:', error));
+
+        function displayCityDetails(country, state, city, cityData) {
+            const contentDiv = document.querySelector('.content');
+            contentDiv.innerHTML = ''; // Clear previous content
+
+            // Create a header for the city
+            const header = document.createElement('h2');
+            header.textContent = `${city}, ${state}, ${country}`;
+            contentDiv.appendChild(header);
+
+            // Create a list for hotel names
+            const hotelsList = document.createElement('ul');
+            hotelsList.classList.remove('hidden'); // Ensure the list is visible
+
+            // Create a toggle for the hotels list
+            const hotelsToggle = document.createElement('span');
+            hotelsToggle.classList.add('toggle', 'hotel-toggle');
+            hotelsToggle.textContent = 'Hotels';
+            hotelsToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                hotelsList.classList.toggle('hidden');
+            });
+            contentDiv.appendChild(hotelsToggle);
+
+            if (cityData && cityData.hotels) {
+                const hotels = cityData.hotels; // Accessing the hotels object
+                // Check if there are any hotels available
+                if (Object.keys(hotels).length > 0) {
+                    Object.keys(hotels).forEach(hotelName => {
+                        const hotelItem = document.createElement('li');
+                        hotelItem.textContent = hotelName; // Display hotel name
+                        hotelsList.appendChild(hotelItem);
+                    });
+                } else {
+                    const noHotelsMessage = document.createElement('li');
+                    noHotelsMessage.textContent = 'No hotels available for this city.';
+                    hotelsList.appendChild(noHotelsMessage);
+                }
+            } else {
+                const noDataMessage = document.createElement('li');
+                noDataMessage.textContent = 'No data available for this city.';
+                hotelsList.appendChild(noDataMessage);
+            }
+            // Append the hotels list to the content div
+            contentDiv.appendChild(hotelsList);
+        }
+
+        function displayImages(containerClass, path, maxIndex) {
+            let imageContainer = document.querySelector(`.${containerClass}`);
+            if (imageContainer) {
+                imageContainer.remove();
+            }
+
+            imageContainer = document.createElement('div');
+            imageContainer.classList.add(containerClass);
+            document.querySelector('.content').appendChild(imageContainer);
+
+            let imageIndex = 1;
+
+            function loadImage() {
+                if (imageIndex > maxIndex) return;
+
+                const imgElement = document.createElement('img');
+                imgElement.src = `${path}${imageIndex}.jpeg`;
+                imgElement.alt = `image ${imageIndex}`;
+
+                imgElement.onload = function () {
+                    imageContainer.appendChild(imgElement);
+                    imageIndex++;
+                    loadImage();
+                };
+
+                imgElement.onerror = function () {
+                    this.remove();
+                };
+            }
+
+            loadImage();
+
+            let scrollAnimationFrame;
+            imageContainer.addEventListener('mousemove', (event) => {
+                const containerWidth = imageContainer.clientWidth;
+                const mouseX = event.clientX - imageContainer.getBoundingClientRect().left;
+                const scrollSpeed = 5;
+
+                function smoothScroll() {
+                    if (mouseX > containerWidth * 0.75) {
+                        imageContainer.scrollLeft += scrollSpeed;
+                    } else if (mouseX < containerWidth * 0.25) {
+                        imageContainer.scrollLeft -= scrollSpeed;
+                    }
+                    scrollAnimationFrame = requestAnimationFrame(smoothScroll);
+                }
+
+                cancelAnimationFrame(scrollAnimationFrame);
+                scrollAnimationFrame = requestAnimationFrame(smoothScroll);
+            });
+
+            imageContainer.addEventListener('mouseleave', () => {
+                cancelAnimationFrame(scrollAnimationFrame);
+            });
+
+            imageContainer.addEventListener('click', (event) => {
+                if (event.target.tagName === 'IMG') {
+                    const imgElement = event.target;
+                    const originalIndex = Array.from(imageContainer.children).indexOf(imgElement);
+                    if (imgElement.classList.contains('full-screen')) {
+                        imgElement.classList.remove('full-screen');
+                        document.querySelector('.full-screen-wrapper').remove();
+                        imageContainer.insertBefore(imgElement, imageContainer.children[originalIndex]);
+                    } else {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('full-screen-wrapper');
+                        imgElement.classList.add('full-screen');
+                        wrapper.appendChild(imgElement);
+                        document.body.appendChild(wrapper);
+
+                        wrapper.addEventListener('click', () => {
+                            imgElement.classList.remove('full-screen');
+                            imageContainer.insertBefore(imgElement, imageContainer.children[originalIndex]);
+                            wrapper.remove();
+                        });
+                    }
+                }
+            });
+        }
+
+        function displayCityImage(country, state, city) {
+            const imagePath = `images/${country}/${state}/${city}/`;
+            displayImages("image-container", imagePath, 100);
+
+            // Remove existing hotel image container if any
+            const existingHotelImageContainer = document.querySelector('.hotel-image-container');
+            if (existingHotelImageContainer) {
+                existingHotelImageContainer.remove();
+            }
+
+            // Remove existing city header if any
+            const existingCityHeader = document.querySelector('.header');
+            if (existingCityHeader) {
+                existingCityHeader.remove();
+            }
+
+            // Create and insert city, state, country name header
+            const cityHeader = document.createElement('div');
+            cityHeader.classList.add('header');
+            cityHeader.textContent = `${city}, ${state}, ${country}`;
+            document.body.appendChild(cityHeader); // Append header to body
+        }
+
+        function displayHotelImage(country, state, city, hotel) {
+            const contentDiv = document.querySelector('.content');
+
+            // Remove existing hotel name header if any
+            const existingHeader = document.querySelector('.footer');
+            if (existingHeader) {
+                existingHeader.remove();
+            }
+
+            const imagePath = `images/${country}/${state}/${city}/hotels/${hotel}/`;
+            displayImages("hotel-image-container", imagePath, 100);
+
+            // Create and insert hotel name footer
+            const hotelFooter = document.createElement('div');
+            hotelFooter.classList.add('footer');
+            hotelFooter.textContent = `${hotel}, ${city}, ${state}, ${country}`;
+            document.body.appendChild(hotelFooter); // Append footer to body
+        }
+
+    function displayVideo(country, state, city) {
+        const contentDiv = document.querySelector('.content');
+
+        // Remove existing video if any
+        const existingVideo = document.querySelector('#myVideo');
+        if (existingVideo) {
+            existingVideo.remove();
+        }
+
+        // Create video element
+        const videoElement = document.createElement('video');
+        videoElement.id = 'myVideo';
+        videoElement.controls = true;
+        videoElement.style.position = 'fixed';
+        videoElement.style.top = '50%';
+        videoElement.style.left = '80%';
+        videoElement.style.transform = 'translate(-50%, -50%)';
+        videoElement.style.zIndex = '1000';
+        videoElement.style.maxWidth = '60%'; // Increased max width
+        videoElement.style.maxHeight = '40%'; // Increased max height
+
+        const sourceElement = document.createElement('source');
+        sourceElement.src = `images/${country}/${state}/${city}/video1.mp4`;
+        sourceElement.addEventListener('error', function() {
+            console.error('Error loading video:', sourceElement.src);
+            videoElement.remove(); // Remove video element if not found
+        });
+        sourceElement.type = 'video/mp4';
+
+        videoElement.appendChild(sourceElement);
+        contentDiv.appendChild(videoElement);
+
+        // Add event listener for double click to mute/unmute
+        videoElement.addEventListener('dblclick', function(event) {
+            event.stopPropagation();
+            videoElement.muted = !videoElement.muted; // Toggle muted state
+        });
+    }
+    </script>
+</body>
+
+</html>

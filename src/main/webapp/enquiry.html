@@ -1,0 +1,651 @@
+<!-- 
+
+This HTML file represents a booking enquiry form for RR Hospitality. The form includes various sections for user input, such as source and destination details, client details, booking type, and transportation options. The form is styled using internal CSS and includes JavaScript functions to dynamically update form fields based on user selections.
+
+Sections:
+1. General body styles
+2. Title centered
+3. Form container
+4. Input fields and labels
+5. Button styling
+6. Container for the image display positions
+7. Styling for card flipper
+8. Country-state-city container
+9. Error message styling
+10. Checkbox group styling
+11. Radio button styling
+12. Source and Destination Section
+13. Image containers for displaying images
+14. Client Details
+15. Booking Type, Hotel Category Section
+16. Booking Type Sub-items
+17. Transportation Section
+18. Any Other Requests Section
+19. Submit Button
+20. JavaScript functions for dynamic form updates
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RR Hospitality Booking</title>
+<style>
+/* General body styles */
+body {
+	font-family: 'Arial', sans-serif;
+	margin: 0;
+	padding: 0;
+	background-image: url('images/Start/4_Background.jpg');
+	background-size: cover;
+	background-position: left;
+	background-attachment: fixed;
+	color: #333;
+	text-align: left;
+	position: relative;
+}
+
+/* Title centered */
+h1 {
+	text-align: center;
+	margin-top: 50px;
+	font-size: 3em;
+	font-weight: bold;
+	color: #F5F5F5;
+	text-shadow: 3px 3px 5px rgba(255, 0, 0, 0.6), 6px 6px 15px
+		rgba(0, 0, 255, 0.6), 9px 9px 20px rgba(255, 255, 0, 0.6), 12px 12px
+		25px rgba(0, 255, 255, 0.6);
+}
+
+/* Form container */
+.form-container {
+	width: 100%;
+	max-width: 1500px;
+	margin: 30px auto;
+	padding: 30px;
+	background-color: rgba(200, 255, 240, 0.8);
+	border-radius: 8px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Input fields and labels */
+label {
+	font-size: 1em;
+	font-weight: bold;
+	margin-bottom: 8px;
+	display: block;
+	color: #444;
+}
+
+/* Input fields and common styles */
+input[type="text"], input[type="email"], input[type="tel"], input[type="date"],
+	input[type="number"], select {
+	width: 100%;
+	padding: 12px;
+	margin: 8px 0 16px 0;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	box-sizing: border-box;
+	font-size: 1em;
+}
+
+.form-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.form-group {
+	flex: 1 1 calc(50% - 20px);
+	min-width: 200px;
+	margin-bottom: 20px;
+}
+
+/* Button styling */
+button {
+	width: 100%;
+	padding: 15px;
+	background-color: #4CAF50;
+	border: none;
+	border-radius: 5px;
+	color: white;
+	font-size: 1.2em;
+	cursor: pointer;
+	margin-top: 20px;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: #45a049;
+}
+
+/* Container for the image display positions */
+.image-container {
+	display: none;
+	max-width: 100%;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+}
+
+.image-display {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.image-display img {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	border-radius: 8px;
+	display: none; /* Initially hidden */
+	margin: 0 5px;
+}
+
+/* Styling for card flipper */
+.card-flipper {
+	cursor: pointer;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 100;
+}
+
+.left {
+	left: 10px;
+}
+
+.right {
+	right: 10px;
+}
+
+.toggle-arrow {
+	cursor: pointer;
+	font-size: 18px;
+	color: #4CAF50;
+	text-align: center;
+	display: block;
+	margin: 10px 0;
+}
+
+.country-state-city-container {
+	display: flex;
+	gap: 20px;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.error {
+	color: red;
+	font-size: 0.9em;
+}
+
+.hide {
+	display: none;
+}
+
+.checkbox-group {
+	max-height: 100px;
+	overflow-y: auto;
+	border: 1px solid #ccc;
+	padding: 5px;
+	border-radius: 4px;
+	width: 100%;
+}
+
+input[type="radio"] {
+	margin-right: 5px; /* Space between radio and label text */
+}
+</style>
+</head>
+
+<body>
+	<h1>Welcome to VGR Enquiry</h1>
+	<div class="form-container">
+		<form id="bookingForm" action="/vgr_events/clientData"
+			method="post">	
+			<!-- Source and Destination Section -->
+			<div class="form-row"
+				style="display: flex; justify-content: center; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap;">
+				<!-- Source Section -->
+				<div class="source-container"
+					style="flex: 1; min-width: 300px; margin-right: 20px;">
+					<div class="headers" style="text-align: center;">
+						<h2>Source</h2>
+					</div>
+					<div class="country-state-city-container">
+						<div class="form-group">
+							<label for="source-country">Country:</label>
+							<select id="source-country" name="source-country" required
+								onchange="updateSourceStates(this)">
+								<option value="">Select Country</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="source-state">State:</label> <select
+								id="source-state" name="source-state" required
+								onchange="updateSourceCities(this)">
+								<option value="">Select State</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="source-city">City:</label> <select
+								id="source-city" name="source-city" required>
+								<option value="">Select City</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<!-- Destination Section -->
+				<div class="destination-container" style="flex: 1; min-width: 300px;">
+					<div class="headers" style="text-align: center;">
+						<h2>Destination</h2>
+					</div>
+					<div class="country-state-city-container">
+						<div class="form-group">
+							<label for="destination-country">Country:</label>
+							<select id="destination-country" name="destination-country" required onchange="updateDestinationStates(this)">
+								<option value="">Select Country</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>State:</label>
+							<div id="state-checkboxes" class="checkbox-group"></div>
+						</div>
+						<div class="form-group">
+							<label>City:</label>
+							<div id="city-checkboxes" class="checkbox-group"></div>
+						</div>
+					</div>
+				</div>
+				</div>
+
+			<!-- Image containers for displaying images -->
+			<div class="image-container" id="image-container">
+				<div class="card-flipper left" aria-label="Previous slide"
+					role="button" onclick="prevImage()">
+					<span> <svg width="24" height="24" viewBox="0 0 24 24">
+                            <path
+								d="M15 6.1c0-.93-1.25-1.6-2.07-.94l-6.31 5.52c-.8.7-.8 1.94 0 2.64l6.31 5.52C13.75 17.54 15 16.97 15 15.9V6.1z"></path>
+                        </svg>
+					</span>
+				</div>
+				<div class="image-display" id="image-display">
+					<!-- Images will be appended here -->
+				</div>
+				<div class="card-flipper right" aria-label="Next slide"
+					role="button" onclick="nextImage()">
+					<span> <svg width="24" height="24" viewBox="0 0 24 24">
+                            <path
+								d="M9 17.9a1.25 1.25 0 002.07.94l6.31-5.52c.8-.7.8-1.94 0-2.64l-6.3-5.52C10.25 4.46 9 5.03 9 6.1v11.8z"></path>
+                        </svg>
+					</span>
+				</div>
+			</div>
+			<!-- Client Details -->
+			<div class="form-row"
+				style="display: flex; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+				<div class="form-group"
+					style="flex: 1; min-width: 200px; margin-right: 10px;">
+					<div class="headers" style="text-align: center;">
+						<h3>Name:</h3>
+					</div>
+					<label for="name" style="display: none;">Name:</label> <input
+						type="text" id="name" name="name" required />
+				</div>
+				<div class="form-group"
+					style="flex: 1; min-width: 200px; margin-right: 10px;">
+					<div class="headers" style="text-align: center;">
+						<h3>Phone Number:</h3>
+					</div>
+					<label for="phone" style="display: none;">Phone Number:</label> <input
+						type="tel" id="phone" name="phone" required />
+				</div>
+				<div class="form-group" style="flex: 1; min-width: 200px;">
+					<div class="headers" style="text-align: center;">
+						<h3>Email:</h3>
+					</div>
+					<label for="email" style="display: none;">Email:</label> <input
+						type="email" id="email" name="email" />
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="checkin">Check-in Date:</label> <input type="date"
+						id="checkin" name="checkin" required />
+				</div>
+				<div class="form-group">
+					<label for="checkout">Check-out Date:</label> <input type="date"
+						id="checkout" name="checkout" required />
+				</div>
+			</div>
+			<!-- Booking Type, Hotel Category Section -->
+			<div class="form-row"
+				style="display: flex; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+				<div class="form-group"
+					style="flex: 1; min-width: 200px; margin-right: 10px;">
+					<label for="bookingType">Booking Type:</label> <select
+						id="bookingType" name="bookingType"
+						onchange="toggleBookingFields()" required>
+						<option value="">Select Booking Type</option>
+						<option value="individual">Individual</option>
+						<option value="bulk">Bulk</option>
+						<option value="school_group">School Group</option>
+						<option value="corporate_booking">Corporate Booking</option>
+						<option value="day_outing">Day Outing</option>
+						<option value="events_and_parties">Events/Birthday Party</option>
+						<option value="wedding_package">Wedding Package</option>
+					</select>
+				</div>
+				<div class="form-group"
+					style="flex: 1; min-width: 200px; margin-right: 10px;">
+					<label for="accommodationType">Meal Preference:</label> <select
+						id="accommodationType" name="accommodationType" required>
+						<option value="">Select Meal Preference</option>
+						<option value="accommodation_with_bf">Only Breakfast</option>
+						<option value="accommodation_with_bf_lunch_dinner">Breakfast
+							and Lunch/Dinner</option>
+						<option value="accommodation_with_all_meals">All Meals
+							Included</option>
+					</select>
+				</div>
+				<div class="form-group" style="flex: 1; min-width: 200px;">
+					<label for="hotelCategory">Hotel Category:</label> <select
+						id="hotelCategory" name="hotelCategory" required>
+						<option value="">Select Hotel Category</option>
+						<option value="1_STAR">1 Star</option>
+						<option value="2_STAR">2 Star</option>
+						<option value="3_STAR">3 Star</option>
+						<option value="4_STAR">4 Star</option>
+						<option value="5_STAR">5 Star</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- Booking Type Sub-items -->
+			<div id="bookingFields" class="hide">
+				<div id="adultFields" class="hide">
+					<div class="form-row">
+						<div class="form-group">
+							<label for="adults">Number of Adults:</label> <input
+								type="number" id="adults" name="adults" min="1" />
+						</div>
+						<div class="form-group" id="childrenField">
+							<label for="children">Number of Children:</label> <input
+								type="number" id="children" name="children" min="0" />
+						</div>
+					</div>
+				</div>
+
+				<div id="schoolGroupFields" class="hide">
+					<div class="form-row"
+						style="display: flex; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+						<div class="form-group"
+							style="flex: 1; min-width: 200px; margin-right: 10px;">
+							<label for="schoolName">School Name:</label> <input type="text"
+								id="schoolName" name="schoolName" />
+						</div>
+						<div class="form-group"
+							style="flex: 1; min-width: 200px; margin-right: 10px;">
+							<label for="numberOfStudents">Number of Students:</label> <input
+								type="number" id="numberOfStudents" name="numberOfStudents"
+								min="1" />
+						</div>
+						<div class="form-group" style="flex: 1; min-width: 200px;">
+							<label for="numberOfCoordinators">Number of Coordinators:</label>
+							<input type="number" id="numberOfCoordinators"
+								name="numberOfCoordinators" min="1" />
+						</div>
+					</div>
+				</div>
+
+				<div id="bulkFields" class="hide">
+					<div class="form-row">
+						<div class="form-group">
+							<label for="numberOfRooms">How many rooms?</label> <input
+								type="number" id="numberOfRooms" name="numberOfRooms" min="1" />
+						</div>
+					</div>
+				</div>
+
+				<div id="eventsAndWeddingsFields" class="hide">
+					<div class="form-row">
+						<div class="form-group">
+							<label for="numberOfAttendees">Number of Attendees:</label> <input
+								type="number" id="numberOfAttendees" name="numberOfAttendees"
+								min="1" />
+						</div>
+					</div>
+				</div>
+				<div id="corporateBookingFields" class="hide">
+					<div class="form-row"
+						style="display: flex; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+
+						<div class="form-group"
+							style="flex: 1; min-width: 200px; margin-right: 10px;">
+							<label for="corporateName">Corporate Name:</label> <input
+								type="text" id="corporateName" name="corporateName" />
+						</div>
+						<div class="form-group"
+							style="flex: 1; min-width: 200px; margin-right: 10px;">
+							<label for="adults">Number of Adults:</label> <input
+								type="number" id="adults" name="adults" min="1" />
+						</div>
+						<div class="form-group" style="flex: 1; min-width: 200px;">
+							<label for="children">Number of Children:</label> <input
+								type="number" id="children" name="children" min="0" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Transportation Section -->
+			<div class="form-row"
+				style="display: flex; align-items: center; margin-bottom: 20px;">
+				<div class="form-group" style="flex: 1; min-width: 200px;">
+					<label for="transportationRequired">Transportation
+						Required:</label> <select id="transportationRequired"
+						name="transportationRequired"
+						onchange="toggleTransportationOptions()">
+						<option value="">Select Option</option>
+						<option value="yes">Yes</option>
+						<option value="no">No</option>
+					</select>
+				</div>
+				<div class="form-group hide" id="vehicleTypeGroup"
+					style="flex: 1; min-width: 200px; margin-left: 10px;">
+					<label for="vehicleType">Preferred Vehicle Type:</label> <select
+						id="vehicleType" name="vehicleType">
+						<option value="">Select Vehicle Type</option>
+						<option value="sedan">Sedan</option>
+						<option value="suv">SUV(Innova/Innova Crysta)</option>
+						<option value="minivan">Tempotraveller(12 seater)</option>
+						<option value="luxury">Bus/LuxuryCoach(18/21/39/49
+							Seater)</option>
+					</select>
+				</div>
+			</div>
+			<!-- Any Other Requests Section -->
+			<div class="form-group">
+				<label for="specialRequests">Any Other Requests:</label>
+				<textarea id="specialRequests" name="specialRequests" rows="3"
+					style="width: 100%;"
+					placeholder="Please specify any other requirements..."></textarea>
+			</div>
+
+			<!-- Submit Button -->
+			<button type="submit">Send Enquiry</button>
+		</form>
+	</div>
+
+	<script>
+		let data = {};
+
+		function fetchData() {
+        fetch('data.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                data = jsonData;
+                populateCountries();
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+	function populateCountries() {
+		const sourceCountrySelect = document.getElementById('source-country');
+		const destinationCountrySelect = document.getElementById('destination-country');
+		sourceCountrySelect.innerHTML = "<option value=''>Select Country</option>";
+		destinationCountrySelect.innerHTML = "<option value=''>Select Country</option>";
+		for (const country in data) {
+			const option = document.createElement('option');
+			option.value = country;
+			option.textContent = country;
+			sourceCountrySelect.appendChild(option);
+			destinationCountrySelect.appendChild(option.cloneNode(true));
+		}
+	}
+
+		let currentImageIndex = 0;
+		// No additional code needed here
+
+		function updateSourceStates(countrySelect) {
+        const stateSelect = document.getElementById('source-state');
+        stateSelect.innerHTML = "<option value=''>Select State</option>";
+        document.getElementById('source-city').innerHTML = "<option value=''>Select City</option>";
+
+        if (countrySelect.value && data[countrySelect.value]) {
+            const states = Object.keys(data[countrySelect.value]);
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+    }
+
+    function updateSourceCities(stateSelect) {
+        const citySelect = document.getElementById('source-city');
+        citySelect.innerHTML = "<option value=''>Select City</option>";
+        const selectedCountry = document.getElementById('source-country').value;
+        const selectedState = stateSelect.value;
+
+        if (selectedCountry && selectedState && data[selectedCountry][selectedState]) {
+            const cities = Object.keys(data[selectedCountry][selectedState]);
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+    }
+
+    function updateDestinationStates(countrySelect) {
+        const stateCheckboxes = document.getElementById('state-checkboxes');
+        stateCheckboxes.innerHTML = "";
+        document.getElementById('city-checkboxes').innerHTML = "";
+
+        if (countrySelect.value && data[countrySelect.value]) {
+            const states = Object.keys(data[countrySelect.value]);
+            states.forEach(state => {
+                const checkbox = document.createElement('label');
+                checkbox.innerHTML = `
+                    <input type="checkbox" name="destination-state[]" value="${state}" onchange="updateDestinationCities()">
+                    ${state}`;
+                stateCheckboxes.appendChild(checkbox);
+            });
+        }
+    }
+
+    function updateDestinationCities() {
+        const cityCheckboxes = document.getElementById('city-checkboxes');
+        cityCheckboxes.innerHTML = "";
+        const selectedCountry = document.getElementById('destination-country').value;
+        const selectedStateCheckboxes = document.querySelectorAll('#state-checkboxes input:checked');
+        const selectedStates = Array.from(selectedStateCheckboxes).map(cb => cb.value);
+
+        selectedStates.forEach(state => {
+            if (data[selectedCountry][state]) {
+                const cities = Object.keys(data[selectedCountry][state]);
+                cities.forEach(city => {
+                    const cityLabel = document.createElement('label');
+                    cityLabel.innerHTML = `
+                        <input type="checkbox" name="destination-city[]" value="${city}">
+                        ${city}`;
+                    cityCheckboxes.appendChild(cityLabel);
+                });
+            }
+        });
+    }
+	document.addEventListener('DOMContentLoaded', fetchData);
+		function toggleBookingFields() {
+			const bookingType = document.getElementById('bookingType').value;
+			const bookingFieldsContainer = document.getElementById('bookingFields');
+			const adultFields = document.getElementById('adultFields');
+			const childrenField = document.getElementById('childrenField');
+			const schoolGroupFields = document.getElementById('schoolGroupFields');
+			const bulkFields = document.getElementById('bulkFields');
+			const eventsAndWeddingsFields = document.getElementById('eventsAndWeddingsFields');
+			const corporateBookingFields = document.getElementById('corporateBookingFields');
+
+			bookingFieldsContainer.classList.remove('hide');
+
+			adultFields.classList.add('hide');
+			childrenField.classList.add('hide');
+			schoolGroupFields.classList.add('hide');
+			bulkFields.classList.add('hide');
+			eventsAndWeddingsFields.classList.add('hide');
+			corporateBookingFields.classList.add('hide');
+
+			switch (bookingType) {
+				case 'individual':
+				case 'day_outing':
+					adultFields.classList.remove('hide');
+					childrenField.classList.remove('hide');
+					break;
+				case 'bulk':
+					bulkFields.classList.remove('hide');
+					break;
+				case 'school_group':
+					schoolGroupFields.classList.remove('hide');
+					break;
+				case 'corporate_booking':
+					corporateBookingFields.classList.remove('hide');
+					break;
+				case 'events_and_parties':
+				case 'wedding_package':
+					eventsAndWeddingsFields.classList.remove('hide');
+					break;
+				default:
+					break;
+			}
+		}
+
+		function toggleTransportationOptions() {
+			const transportationSelect = document.getElementById('transportationRequired');
+			const vehicleTypeGroup = document.getElementById('vehicleTypeGroup');
+
+			if (transportationSelect.value === "yes") {
+				vehicleTypeGroup.classList.remove('hide');
+			} else {
+				vehicleTypeGroup.classList.add('hide');
+				// Reset vehicle type selection when option is hidden
+				document.getElementById('vehicleType').value = ""; // Reset vehicle type to none
+			}
+		}
+	</script>
+</body>
+
+</html>
